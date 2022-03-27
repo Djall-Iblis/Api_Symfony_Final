@@ -6,6 +6,7 @@ use App\Repository\SubjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SubjectRepository::class)]
 class Subject
@@ -16,20 +17,25 @@ class Subject
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['SW_find_all', 'SW_find_one', 'subject_find_all'])]
     private $name;
 
     #[ORM\Column(type: 'date')]
+    #[Groups(['subject_find_all'])]
     private $dateOfStart;
 
     #[ORM\Column(type: 'date')]
+    #[Groups(['subject_find_all'])]
     private $dateOfEnd;
 
     #[ORM\ManyToOne(targetEntity: SupportWorker::class, inversedBy: 'subjects')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['subject_find_all'])]
     private $idSupportWorker;
 
     #[ORM\ManyToOne(targetEntity: Promotion::class, inversedBy: 'subjects')]
     #[ORM\JoinColumn(nullable: false)]
+//    #[Groups(['subject_find_all'])]
     private $idPromotion;
 
     #[ORM\OneToMany(mappedBy: 'idSubject', targetEntity: Grade::class)]

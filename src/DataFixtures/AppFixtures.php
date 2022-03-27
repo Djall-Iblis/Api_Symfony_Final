@@ -2,15 +2,17 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\CoreClass;
 use App\Entity\Grade;
 use App\Entity\Promotion;
 use App\Entity\Student;
 use App\Entity\Subject;
 use App\Entity\SupportWorker;
 use App\Entity\User;
+use DateInterval;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use phpDocumentor\Reflection\Types\Array_;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
@@ -45,12 +47,14 @@ class AppFixtures extends Fixture
             $manager->persist($user);
         }
 
+        $list_of_promotions = [];
         for ($i = 0; $i < 5; $i++) {
             $promotion = new Promotion();
             $promotion->setName('A' . $i);
             $promotion->setDateOfRelease('202' . $i);
 
             $manager->persist($promotion);
+            $list_of_promotions[] = $promotion;
         }
 
         $manager->flush();
@@ -58,7 +62,7 @@ class AppFixtures extends Fixture
         $promoRepo = $manager->getRepository(Promotion::class);
         $allPromo = $promoRepo->findAll();
 
-
+        $list_of_student = [];
         for ($i = 0; $i < 10; $i++) {
             $randKey = rand(0, count($allPromo) - 1);
 
@@ -66,9 +70,10 @@ class AppFixtures extends Fixture
             $student->setFirstName('studentFirstName' . $i);
             $student->setLastName('studentLastName' . $i);
             $student->setAge(20);
-            $student->setDateOfArrival('20' . rand(15, 20));
+            $student->setDateOfArrival('2022');
             $student->setIdPromotion($allPromo[$randKey]);
 
+            $list_of_student[] = $student;
             $manager->persist($student);
         }
 
@@ -89,8 +94,8 @@ class AppFixtures extends Fixture
         $allSW = $SWRepo->findAll();
 
         for ($i = 0; $i < 10; $i++) {
-            $dateStart = new \DateTime();
-            $dateStart->format('Y-m-d');
+            $dateStart = new DateTime();
+            $dateEnd = DateTime::createFromInterface($dateStart)->add(new DateInterval('P1D'));
 
             $randKey1 = rand(0, count($allPromo) - 1);
             $randKey2 = rand(0, count($allSW) - 1);
@@ -98,7 +103,7 @@ class AppFixtures extends Fixture
             $subject = new Subject();
             $subject->setName('Subject' . $i);
             $subject->setDateOfStart($dateStart);
-            $subject->setDateOfEnd($dateStart);
+            $subject->setDateOfEnd($dateEnd);
             $subject->setIdPromotion($allPromo[$randKey1]);
             $subject->setIdSupportWorker($allSW[$randKey2]);
 

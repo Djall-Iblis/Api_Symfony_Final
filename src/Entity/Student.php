@@ -6,6 +6,7 @@ use App\Repository\StudentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: StudentRepository::class)]
 class Student
@@ -16,22 +17,35 @@ class Student
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['student_find_all', 'student_find_one',
+        'student_post', 'student_put',
+        'promotion_find_one'])]
     private $firstName;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['student_find_all', 'student_find_one',
+        'student_post', 'student_put',
+        'promotion_find_one'])]
     private $lastName;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['student_find_all', 'student_find_one',
+        'student_post', 'student_put'])]
     private $age;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['student_find_all', 'student_find_one',
+        'student_post', 'student_put'])]
     private $dateOfArrival;
 
     #[ORM\ManyToOne(targetEntity: Promotion::class, inversedBy: 'students')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['student_find_all', 'student_find_one',
+        'student_post', 'student_put'])]
     private $idPromotion;
 
-    #[ORM\OneToMany(mappedBy: 'idStudent', targetEntity: Grade::class)]
+    #[ORM\OneToMany(mappedBy: 'idStudent', targetEntity: Grade::class, orphanRemoval: true)]
+    #[Groups(['student_find_one'])]
     private $grades;
 
     public function __construct()

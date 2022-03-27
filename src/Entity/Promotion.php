@@ -6,9 +6,10 @@ use App\Repository\PromotionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PromotionRepository::class)]
-class Promotion
+class Promotion extends \App\Entity\SupportWorker
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,9 +17,13 @@ class Promotion
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['promotion_find_all', 'promotion_find_one',
+        'student_find_one', 'student_post',
+        'student_put'])]
     private $name;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['promotion_find_all', 'promotion_find_one'])]
     private $dateOfRelease;
 
     #[ORM\OneToMany(mappedBy: 'idPromotion', targetEntity: Student::class)]

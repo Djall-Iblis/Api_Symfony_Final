@@ -6,6 +6,7 @@ use App\Repository\SupportWorkerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SupportWorkerRepository::class)]
 class SupportWorker
@@ -15,16 +16,20 @@ class SupportWorker
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['SW_find_all', 'SW_find_one', 'subject_find_all'])]
     private $firstName;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['SW_find_all', 'SW_find_one', 'subject_find_all'])]
     private $lastName;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['SW_find_all', 'SW_find_one'])]
     private $dateOfArrival;
 
     #[ORM\OneToMany(mappedBy: 'idSupportWorker', targetEntity: Subject::class)]
+    #[Groups(['SW_find_all', 'SW_find_one'])]
     private $subjects;
 
     public function __construct()

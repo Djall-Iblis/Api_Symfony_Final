@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\GradeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: GradeRepository::class)]
 class Grade
@@ -14,6 +15,7 @@ class Grade
     private $id;
 
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups(['student_find_one'])]
     private $grade;
 
     #[ORM\ManyToOne(targetEntity: Student::class, inversedBy: 'grades')]
